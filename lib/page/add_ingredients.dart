@@ -15,8 +15,8 @@ class _AddIngredientsState extends State<AddIngredients> {
   late Future<List<Category>> _categoryFuture;
   List<Ingredient> ingredients = [];
   final IngredientsApi ingredientsApi = IngredientsApi();
-  
-  Category get category => String;
+
+  Category get category => Category(id: 0, name: 'All');
 
   @override
   void initState() {
@@ -148,6 +148,13 @@ class _AddIngredientsPageState extends State<AddIngredientsPage> {
   String? _name;
   String? _unit;
 
+  Future<List<Category>> _loadCategories() async {
+    await Future.delayed(Duration(seconds: 2));
+    return [
+      Category(id: 0, name: 'All'),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -171,7 +178,7 @@ class _AddIngredientsPageState extends State<AddIngredientsPage> {
                       items: categories.map((category) {
                         return DropdownMenuItem<int>(
                           value: category.id,
-                          child: Text(category.name),
+                          child: Text('${category.name}'),
                         );
                       }).toList(),
                       onChanged: (value) {
@@ -217,15 +224,15 @@ class _AddIngredientsPageState extends State<AddIngredientsPage> {
                               category: _category!,
                               name: _name!,
                               unit: _unit!);
-                          /*final category = Category(
-                        id: _category,
-                        name: _name!,
-                      );
-                      */
+                          final category = Category(
+                            id: _category,
+                            name: _name!,
+                          );
+
                           try {
                             final addedIngredient =
                                 await IngredientsApi.addIngredient(ingredient);
-                            final int generatedId = addedIngredient.id;
+                            final int generatedId = addedIngredient.id as int;
                             final addedCategory =
                                 await CategoryApi.addCategory(category);
                             Navigator.pop(context, {
